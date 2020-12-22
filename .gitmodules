@@ -6,3 +6,15 @@
 	path = submodules/proj4
 	url = https://github.com/OSGeo/proj.4.git
 	ignore = all
+[submodule "submodules/proj6"]
+	path = submodules/proj6
+	url = git@github.com:OSGeo/PROJ.git
+	ignore = all
+[submodule "pdfium"]
+	path = submodules/pdfium-gdal-patch
+	url = git@github.com:rouault/pdfium.git
+	ignore = all
+[submodule "pdfium-lib"]
+	path = submodules/pdfium-android
+	url = git@github.com:trailbehind/pdfium-lib.git
+	ignore = all

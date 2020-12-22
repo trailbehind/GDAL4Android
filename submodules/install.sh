@@ -4,8 +4,12 @@ export MIN_SDK_VERSION=$2
 export APP_ROOT=$(pwd)
 export HOST_TAG=linux-x86_64
 export GDALDIR=$APP_ROOT/../submodules/gdal/gdal
-export PROJDIR=$APP_ROOT/../submodules/proj4
+export PDFIUM_DIR=$APP_ROOT/../submodules/release
+export PROJDIR=$APP_ROOT/../submodules/proj-6.3.2
 export BUILDDIR=$APP_ROOT/../submodules/build
+export SQLITE3_LIBS="-L/usr/bin -lsqlite3"
+export SQLITE3_CFLAGS="-I/usr/include"
+
 
 # https://developer.android.com/ndk/guides/other_build_systems
 # https://developer.android.com/ndk/guides/standalone_toolchain
@@ -27,7 +31,7 @@ do
     export TRIPLE=${TRIPLEs[$i]}
 
     export CFLAGS=""
-    export CXXFLAGS="-stdlib=libc++"
+    export CXXFLAGS="-stdlib=libc++ -v"
     #export LDFLAGS="-stdlib=libc++" #"-static-libstdc++"
     #export LIBS="-lstdc++"
 
@@ -53,15 +57,22 @@ do
         #Enable AR, AS, LD, STRIP
 
     echo "######### " $ABI ":" $TRIPLE " ##########"
+    mkdir -p $APP_ROOT/src/main/jniLibs/$ABI/
+
+    #PROJ.4
+    cd $PROJDIR
+    make distclean
+    ./configure --host=$TRIPLE --prefix=$BUILDDIR/$ABI
+    make
+    make install
 
     # GDAL
     cd $GDALDIR
     make clean
-    ./configure --host=$TRIPLE --with-libz=internal --with-curl=no --with-xml2=no --with-cpp14 --prefix=$BUILDDIR/$ABI
+    ./configure --host=$TRIPLE --with-libz=internal --with-curl=no --with-xml2=no --with-cpp14 --prefix=$BUILDDIR/$ABI --with-proj=$BUILDDIR/$ABI
     #./configure --host=$TRIPLE --with-libz=internal --with-cpp14 --prefix=$BUILDDIR/$ABI
     make
     make install
-    mkdir -p $APP_ROOT/src/main/jniLibs/$ABI/
     cp $BUILDDIR/$ABI/lib/libgdal.so $APP_ROOT/src/main/jniLibs/$ABI/
 
     # SWIG
@@ -73,15 +84,6 @@ do
     $GDALDIR/libtool --mode=install $GDALDIR/install-sh -c lib*jni.la $BUILDDIR/$ABI/lib
     cp $BUILDDIR/$ABI/lib/lib*jni.so $APP_ROOT/src/main/jniLibs/$ABI/
 
-    #PROJ.4
-    cd $PROJDIR
-    ./autogen.sh
-    ./configure --host=$TRIPLE --prefix=$BUILDDIR/$ABI
-    make clean
-    make
-    cd src
-    make install
-    cp $BUILDDIR/$ABI/lib/libproj.so $APP_ROOT/src/main/jniLibs/$ABI/
 done
 
 mkdir $APP_ROOT/src/main/cpp
