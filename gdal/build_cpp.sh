@@ -50,9 +50,9 @@ function build_sqlite() {
 
 
   if [[ "${BUILD_TYPE,,}" == "release" ]]; then
-    $SOURCE_DIR/configure --host=$TARGET --prefix=$INSTALL_DIR CFLAGS="-O3 -g0 -finline-functions" CPPFLAGS="-O3 -g0 -finline-functions"
+    $SOURCE_DIR/configure --host=$TARGET --prefix=$INSTALL_DIR CFLAGS="-O3 -g0 -finline-functions -Wno-int-conversion" CPPFLAGS="-O3 -g0 -finline-functions"
   else
-    $SOURCE_DIR/configure --host=$TARGET --prefix=$INSTALL_DIR CFLAGS="-O0 -g -fno-inline-functions" CPPFLAGS="-O0 -g -fno-inline-functions"
+    $SOURCE_DIR/configure --host=$TARGET --prefix=$INSTALL_DIR CFLAGS="-O0 -g -fno-inline-functions -Wno-int-conversion" CPPFLAGS="-O0 -g -fno-inline-functions"
   fi
 
   make clean
