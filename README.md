@@ -12,8 +12,6 @@ Version Info: GDAL 3.7.0, PROJ 9.2.1, SQLITE 3.42.0, EXPAT 2.5.0(used for kml su
 
 This project provides a Dockerfile which you can build a docker image which is suitable to build GDAL4Android without environment problems. Below is some examples about how you can build GDAL4Android with docker.
 
-To build 4kb page size app(Default):
-
 ```bash
 # Note: don't forgot to install docker.
 
@@ -42,46 +40,6 @@ cd /root/GDAL4Android
 # build gdaltest apk, the output apk fiel is in: GDAL4Android/gdaltest/build/outputs/apk/debug/gdaltest-debug.apk
 ./gradlew gdaltest:assembleDebug
 ```
-
-
-
-To build 16kb page size app:
-
-> In docker/Dockerfile_16kb, NDK r28 is used in order to compile 16 KB-aligned by  default, so no any other extra flags needed.
-
-```bash
-# Note: don't forgot to install docker.
-
-cd <your-workspace-path>
-git clone https://github.com/kikitte/GDAL4Android.git
-cd GDAL4Android
-
-# this step produces an image named gdal4android_builder_img
-docker build -t gdal4android_builder_img_16kb - < docker/Dockerfile_16kb
-
-# this step runs a container so you can build GDAL4Android within it.
-docker run -it --name gdal4android_builder_16kb -v .:/root/GDAL4Android gdal4android_builder_img_16kb
-
-# Note: You are now in the container environment, /root/GDAL4Android is the project root directory in the container.
-
-# override the default FindJNI.cmake, 
-cp /root/GDAL4Android/docker/cmake_modules/FindJNI.cmake /usr/share/cmake-3.22/Modules/FindJNI.cmake
-
-
-# change working direction to the project root direcory
-cd /root/GDAL4Android
-# configure ndk directory
-echo "ndk.dir=/root/android_sdk/ndk/28.1.13356709" > local.properties
-
-# clean project first
-./gradlew gdal:clean
-# build gdal aar, the output aar file is in: GDAL4Android/gdal/build/outputs/aar/gdal-release.aar
-./gradlew gdal:assembleRelease
-# build gdaltest apk, the output apk fiel is in: GDAL4Android/gdaltest/build/outputs/apk/debug/gdaltest-debug.apk
-./gradlew gdaltest:assembleDebug
-```
-
-
 
 ### Build on local machine
 
@@ -116,6 +74,4 @@ cd <GDAL4Android root directory>
 
 ### Credit
 
-https://github.com/OSGeo/gdal/blob/master/.github/workflows/android_cmake/start.sh
-
-https://github.com/paamand/GDAL4Android
+https://github.com/kikitte/GDAL4Android

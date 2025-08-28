@@ -12,6 +12,7 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
+
 rootProject.name = "GDAL4Android"
-include ':gdal'
-include ':gdaltest'
+include(":gdal")
+include(":gdaltest")
