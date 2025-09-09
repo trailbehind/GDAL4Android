@@ -2,21 +2,15 @@
 
 This project builds GDAL into an [Android Archive(AAR)](https://developer.android.com/studio/projects/android-library) file. So you can use GDAL's functionality in your Android App.
 
-Version Info: GDAL 3.7.0, PROJ 9.2.1, SQLITE 3.42.0, EXPAT 2.5.0(used for kml support)
+### Build with Docker
 
-[DOWNLOAD AAR file](https://github.com/kikitte/GDAL4Android/releases)
-
-
-
-### Build with Docker(Recommend)
-
-This project provides a Dockerfile which you can build a docker image which is suitable to build GDAL4Android without environment problems. Below is some examples about how you can build GDAL4Android with docker.
+This project provides a Dockerfile which you can build a docker image which is suitable to build GDAL4Android without environment problems.
 
 ```bash
 # Note: don't forgot to install docker.
 
 cd <your-workspace-path>
-git clone https://github.com/kikitte/GDAL4Android.git
+git clone https://github.com/trailbehind/GDAL4Android.git
 cd GDAL4Android
 
 # this step produces an image named gdal4android_builder_img
@@ -30,45 +24,14 @@ docker run -it --name gdal4android_builder -v .:/root/GDAL4Android gdal4android_
 # override the default FindJNI.cmake, 
 cp /root/GDAL4Android/docker/cmake_modules/FindJNI.cmake /usr/share/cmake-3.22/Modules/FindJNI.cmake
 
-# change working direction to the project root direcory
+# change working direction to the project root directory
 cd /root/GDAL4Android
 
 # clean project first
 ./gradlew gdal:clean
 # build gdal aar, the output aar file is in: GDAL4Android/gdal/build/outputs/aar/gdal-release.aar
 ./gradlew gdal:assembleRelease
-# build gdaltest apk, the output apk fiel is in: GDAL4Android/gdaltest/build/outputs/apk/debug/gdaltest-debug.apk
-./gradlew gdaltest:assembleDebug
-```
-
-### Build on local machine
-
-- Linux
-
-  bash
-
-  some utilities: getconf & make & cmake & libtool & ant & ...
-
-  swig: for building gdal java bindings.
-
-- Android Studio 2022.2 or newer
-
-  with latest ndk installed, r25c or newer
-
-  use Android Studio default JDK as Gradle JDK (specified in Gradle settings)
-
-You may encounter problems caused by development environment, if something is missing, just install it.
-
-How to build?
-
-```bash
-cd <GDAL4Android root directory>
-
-# clean project first
-./gradlew gdal:clean
-# build gdal aar, the output aar file is in: GDAL4Android/gdal/build/outputs/aar/gdal-release.aar
-./gradlew gdal:assembleRelease
-# build gdaltest apk, the output apk fiel is in: GDAL4Android/gdaltest/build/outputs/apk/debug/gdaltest-debug.apk
+# build gdaltest apk, the output apk file is in: GDAL4Android/gdaltest/build/outputs/apk/debug/gdaltest-debug.apk
 ./gradlew gdaltest:assembleDebug
 ```
 
